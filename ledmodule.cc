@@ -1,4 +1,7 @@
 #include "led-matrix.h"
+#include "threaded-canvas-manipulator.h"
+#include "transformer.h"
+#include "graphics.h"
 
 #include <unistd.h>
 #include <math.h>
@@ -8,6 +11,7 @@
 using rgb_matrix::GPIO;
 using rgb_matrix::RGBMatrix;
 using rgb_matrix::Canvas;
+using rgb_matrix::UArrangementTransformer;
 
 volatile bool interrupt_received = false;
 static void InterruptHandler(int signo) {
@@ -43,7 +47,9 @@ int main(int argc, char *argv[]) {
   defaults.chain_length = 4;
   defaults.parallel = 1;
   defaults.show_refresh_rate = true;
-  Canvas *canvas = rgb_matrix::CreateMatrixFromFlags(&argc, &argv, &defaults);
+  RGBMatrix *matrix = rgb_matrix::CreateMatrixFromFlags(&argc, &argv, &defaults);
+  matrix->ApplyStaticTransformer(UArrangementTransformer(defaults.parallel));
+  Canvas *canvas = matrix;
   if (canvas == NULL)
     return 1;
 
