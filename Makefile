@@ -1,8 +1,9 @@
 CFLAGS=-Wall -O3 -g -std=c++11
 CXXFLAGS=$(CFLAGS)
-OBJECTS=ledmodule.o communicator.o 
-OBJECTS_TO_LINK=communicator.o
+OBJECTS=ledmodule.o communicator.o message.pb.o
+OBJECTS_TO_LINK=communicator.o message.pb.o
 BINARIES=ledmodule
+LDFLAGS+=-lprotobuf
 
 # Where our library resides. You mostly only need to change the
 # RGB_LIB_DISTRIBUTION, this is where the library is checked out.
@@ -20,7 +21,7 @@ $(RGB_LIBRARY): FORCE
 
 ledmodule : $(OBJECTS) $(RGB_LIBRARY)
 	$(CXX) $< $(OBJECTS_TO_LINK) -o $@ $(LDFLAGS)
-	
+
 %.o : %.cc
 	$(CXX) -I$(RGB_INCDIR) $(CXXFLAGS) -c -o $@ $<
 	
