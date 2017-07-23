@@ -1,6 +1,7 @@
 CFLAGS=-Wall -O3 -g -std=c++11
 CXXFLAGS=$(CFLAGS)
 OBJECTS=ledmodule.o communicator.o 
+OBJECTS_TO_LINK=communicator.o
 BINARIES=ledmodule
 
 # Where our library resides. You mostly only need to change the
@@ -17,12 +18,9 @@ all : $(BINARIES)
 $(RGB_LIBRARY): FORCE
 	$(MAKE) -C $(RGB_LIBDIR)
 
-ledmodule : ledmodule.o $(RGB_LIBRARY)
-	$(CXX) $< -o $@ $(LDFLAGS)
+ledmodule : $(OBJECTS) $(RGB_LIBRARY)
+	$(CXX) $< $(OBJECTS_TO_LINK) -o $@ $(LDFLAGS)
 	
-communicator : communicator.o $(RGB_LIBRARY)
-	$(CXX) $< -o $@ $(LDFLAGS)
-
 %.o : %.cc
 	$(CXX) -I$(RGB_INCDIR) $(CXXFLAGS) -c -o $@ $<
 	
