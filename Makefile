@@ -1,6 +1,6 @@
-CFLAGS=-Wall -O3 -g
+CFLAGS=-Wall -O3 -g -std=c++11
 CXXFLAGS=$(CFLAGS)
-OBJECTS=ledmodule.o
+OBJECTS=ledmodule.o communicator.o 
 BINARIES=ledmodule
 
 # Where our library resides. You mostly only need to change the
@@ -19,8 +19,14 @@ $(RGB_LIBRARY): FORCE
 
 ledmodule : ledmodule.o $(RGB_LIBRARY)
 	$(CXX) $< -o $@ $(LDFLAGS)
+	
+communicator : communicator.o $(RGB_LIBRARY)
+	$(CXX) $< -o $@ $(LDFLAGS)
 
 %.o : %.cc
+	$(CXX) -I$(RGB_INCDIR) $(CXXFLAGS) -c -o $@ $<
+	
+%.o : %.cpp
 	$(CXX) -I$(RGB_INCDIR) $(CXXFLAGS) -c -o $@ $<
 
 clean:
