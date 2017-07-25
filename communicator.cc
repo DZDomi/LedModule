@@ -64,7 +64,7 @@ Action Communicator::getRequest(string &data) {
 	}
 	//Connection closed
 	if(bytesRead == 0){
-		return Action::closed;
+		return Action::CLOSED;
 	}
 	int action = stoi(data.substr(0, 1));
 	data = data.substr(2, data.length() - 2);

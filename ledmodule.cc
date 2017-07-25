@@ -17,23 +17,23 @@ int main(int argc, char *argv[]) {
 		string data = "";
 		Action action = com->getRequest(data);
 		switch(action){
-			case Action::text:
+			case Action::TEXT:
 				cout << "text" << endl;
 				//TODO: Implement Me
 				break;
-			case Action::picture:
+			case Action::PICTURE:
 				cout << "picture" << endl;
 				//TODO: Implement Me
 				break;
-			case Action::gif:
+			case Action::GIF:
 				cout << "gif" << endl;
 				//TODO: Implement Me
 				break;
-			case Action::video:
+			case Action::VIDEO:
 				cout << "video" << endl;
 				//TODO: Implement Me
 				break;
-			case Action::closed:
+			case Action::CLOSED:
 				closed = true;
 				break;
 		}
