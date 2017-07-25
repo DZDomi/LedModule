@@ -1,7 +1,7 @@
 CFLAGS=-Wall -O3 -g -std=c++11
 CXXFLAGS=$(CFLAGS)
-OBJECTS=ledmodule.o communicator.o message.pb.o
-OBJECTS_TO_LINK=communicator.o message.pb.o
+OBJECTS=ledmodule.o communicator.o
+OBJECTS_TO_LINK=communicator.o
 BINARIES=ledmodule
 LDFLAGS+=-lprotobuf
 
@@ -23,9 +23,6 @@ ledmodule : $(OBJECTS) $(RGB_LIBRARY)
 	$(CXX) $< $(OBJECTS_TO_LINK) -o $@ $(LDFLAGS)
 
 %.o : %.cc
-	$(CXX) -I$(RGB_INCDIR) $(CXXFLAGS) -c -o $@ $<
-	
-%.o : %.cpp
 	$(CXX) -I$(RGB_INCDIR) $(CXXFLAGS) -c -o $@ $<
 
 clean:

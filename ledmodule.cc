@@ -1,7 +1,6 @@
 #include <iostream>
 
 #include "communicator.h"
-#include "message.pb.h"
 
 using namespace std;
 
@@ -10,9 +9,9 @@ int main(int argc, char *argv[]) {
 	com->acceptConnections();
 	bool closed = false;
 
-	GOOGLE_PROTOBUF_VERIFY_VERSION;
+    //GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-	tutorial::AddressBook address_book;
+	//tutorial::AddressBook address_book;
 
 	while(!closed){
 		string data = "";

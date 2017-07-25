@@ -11,11 +11,11 @@
 using namespace std;
 
 enum Action {
-	text = 1,
-	picture = 2,
-	gif = 3,
-	video = 4,
-	closed = 5
+	TEXT = 1,
+	PICTURE = 2,
+	GIF = 3,
+	VIDEO = 4,
+	CLOSED = 5
 };
 
 class Communicator {
