@@ -33,3 +33,4 @@
 
 #KDevelope Shit
 *.kate-swp
+.kdev*
