@@ -1,7 +1,7 @@
 CFLAGS=-Wall -O3 -g -std=c++11
 CXXFLAGS=$(CFLAGS)
 OBJECTS=ledmodule.o communicator.o
-OBJECTS_TO_LINK=communicator.o
+OBJECTS_TO_LINK=communicator.o models/request.pb.o
 BINARIES=ledmodule
 LDFLAGS+=-lprotobuf
 

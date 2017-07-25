@@ -51,10 +51,11 @@ void Communicator::acceptConnections() {
 	client = accept(server, (struct sockaddr *) &client_addr, &clientLength);
 }
 
-Action Communicator::getRequest(string &data) {
+string Communicator::getRequest() {
 	int bufLength = 1024;
 	char buffer[bufLength + 1];
-	
+	string data = "";
+    
 	int bytesRead = -1;
 	while((bytesRead = recv(client, buffer, bufLength, 0)) > 0){
 		data.append(buffer, bytesRead);
@@ -64,11 +65,10 @@ Action Communicator::getRequest(string &data) {
 	}
 	//Connection closed
 	if(bytesRead == 0){
-		return Action::CLOSED;
+		throw std::runtime_error("Connection closed");
 	}
-	int action = stoi(data.substr(0, 1));
-	data = data.substr(2, data.length() - 2);
-	return static_cast<Action>(action);
+	data = data.substr(0, data.length() - 1);
+	return data;
 }
 
 Communicator::~Communicator() {

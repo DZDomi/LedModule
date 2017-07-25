@@ -14,8 +14,7 @@ enum Action {
 	TEXT = 1,
 	PICTURE = 2,
 	GIF = 3,
-	VIDEO = 4,
-	CLOSED = 5
+	VIDEO = 4
 };
 
 class Communicator {
@@ -27,7 +26,7 @@ class Communicator {
 		~Communicator();
 		
 		void acceptConnections();
-		Action getRequest(string &data);
+		string getRequest();
 		
 	private:
 		static Communicator* instance;

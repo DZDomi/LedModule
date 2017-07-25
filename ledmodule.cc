@@ -1,43 +1,54 @@
 #include <iostream>
+#include <sstream>
 
 #include "communicator.h"
+#include "models/request.pb.h"
 
 using namespace std;
 
 int main(int argc, char *argv[]) {
+    
+    GOOGLE_PROTOBUF_VERIFY_VERSION;
+    
+    ledmodule::Request request;
+    string data;
+    
 	Communicator *com = Communicator::getInstance("/tmp/test.sock");
 	com->acceptConnections();
-	bool closed = false;
 
-    //GOOGLE_PROTOBUF_VERIFY_VERSION;
-
-	//tutorial::AddressBook address_book;
-
-	while(!closed){
-		string data = "";
-		Action action = com->getRequest(data);
-		switch(action){
-			case Action::TEXT:
-				cout << "text" << endl;
-				//TODO: Implement Me
+	while(1){
+        try {
+            data = com->getRequest();
+        } catch(std::runtime_error &e){
+            cout << "Connection from client closed" << endl;
+            break;
+        }
+        
+        request.ParseFromString(data);
+        
+        cout << request.sender() << endl;
+        cout << request.action() << endl;
+        
+		switch(request.action()){
+            case ledmodule::Request::TEXT:
+				cout << request.textrequest().text() << endl;
 				break;
-			case Action::PICTURE:
+			case ledmodule::Request::PICTURE:
 				cout << "picture" << endl;
 				//TODO: Implement Me
 				break;
-			case Action::GIF:
+			case ledmodule::Request::GIF:
 				cout << "gif" << endl;
 				//TODO: Implement Me
 				break;
-			case Action::VIDEO:
+			case ledmodule::Request::VIDEO:
 				cout << "video" << endl;
 				//TODO: Implement Me
 				break;
-			case Action::CLOSED:
-				closed = true;
-				break;
 		}
-		cout << data << endl;
 	}
 	delete com;
+    google::protobuf::ShutdownProtobufLibrary();
+    
+    return EXIT_SUCCESS;
 }
