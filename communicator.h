@@ -1,6 +1,7 @@
 #include <iostream>
 #include <netinet/in.h>
 #include <signal.h>
+#include <stdexcept>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
