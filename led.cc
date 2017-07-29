@@ -32,7 +32,7 @@ Led::Led() : color(255, 255, 0) {
 
 void Led::printText(string text){
     rgb_matrix::DrawText(this->matrix, this->font, 0, (this->font.baseline() + this->matrix->height()) / 2, this->color, NULL, text.c_str());
-    usleep(100000);
+    //usleep(100000);
 }
 
 void Led::calculateColor(int *continuum, int *red, int *green, int *blue){

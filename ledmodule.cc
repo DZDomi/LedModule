@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
     
     led->printText("Hello World");
     
-	while(1){
+	while(true){
         string data;
         try {
             data = com->getRequest();
