@@ -17,8 +17,6 @@ int main(int argc, char *argv[]) {
 	Communicator *com = Communicator::getInstance("/tmp/test.sock");
 	com->acceptConnections();
     
-    led->printText("Hello World");
-    
 	while(true){
         string data;
         try {
@@ -36,6 +34,7 @@ int main(int argc, char *argv[]) {
         
 		switch(request.action()){
             case ledmodule::Request::TEXT:
+                led->printText(request.textrequest().text());
 				cout << request.textrequest().text() << endl;
 				break;
 			case ledmodule::Request::PICTURE:
