@@ -10,13 +10,6 @@
 
 using namespace std;
 
-enum Action {
-	TEXT = 1,
-	PICTURE = 2,
-	GIF = 3,
-	VIDEO = 4
-};
-
 class Communicator {
 	public:
 		static Communicator* getInstance(string);

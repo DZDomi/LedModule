@@ -1,0 +1,34 @@
+#include <iostream>
+#include <netinet/in.h>
+#include <signal.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/un.h>
+#include <sys/socket.h>
+#include <unistd.h>
+
+#include "led-matrix.h"
+#include "transformer.h"
+
+using namespace std;
+using rgb_matrix::RGBMatrix;
+
+class Led {
+	public:
+		static Led* getInstance();
+		//Needed for singletons
+		Led(Led const&) = delete;
+		void operator=(Led const&) = delete;
+		~Led();
+		
+		void printText(string text);
+		
+	private:
+		static Led* instance;
+		Led();
+		static void setUpInterruptHandler();
+		static void interrupt(int);
+        
+        RGBMatrix *matrix;
+};

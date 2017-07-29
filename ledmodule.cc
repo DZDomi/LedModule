@@ -1,7 +1,10 @@
 #include <iostream>
 #include <sstream>
 
+#include "led-matrix.h"
+
 #include "communicator.h"
+#include "led.h"
 #include "models/request.pb.h"
 
 using namespace std;
@@ -10,23 +13,23 @@ int main(int argc, char *argv[]) {
     
     GOOGLE_PROTOBUF_VERIFY_VERSION;
     
-    ledmodule::Request request;
-    string data;
-    
+    Led *led = Led::getInstance();
 	Communicator *com = Communicator::getInstance("/tmp/test.sock");
 	com->acceptConnections();
 
 	while(1){
+        string data;
         try {
             data = com->getRequest();
         } catch(std::runtime_error &e){
-            cout << "Connection from client closed" << endl;
+            cout << e.what() << endl;
             break;
         }
         
+        ledmodule::Request request;
         request.ParseFromString(data);
         
-        cout << request.sender() << endl;
+        cout << "Message from: " << request.sender() << endl;
         cout << request.action() << endl;
         
 		switch(request.action()){
