@@ -34,6 +34,6 @@ class Led {
         void calculateColor(int *continuum, int *red, int *green, int *blue);
         
         RGBMatrix *matrix;
-        Font *font;
+        Font font;
         Color color;
 };

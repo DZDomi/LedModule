@@ -23,7 +23,8 @@ Led::Led() : color(255, 255, 0) {
     this->matrix = rgb_matrix::CreateMatrixFromOptions(options, runtime);
     this->matrix->ApplyStaticTransformer(rgb_matrix::UArrangementTransformer(options.parallel));
     
-    this->font->LoadFont("fonts/8x13.bdf");
+    this->font = Font();
+    this->font.LoadFont("fonts/8x13.bdf");
     
     this->matrix->SetBrightness(100);
     
@@ -31,7 +32,7 @@ Led::Led() : color(255, 255, 0) {
 
 void Led::printText(string text){
     while(true){
-     cout << rgb_matrix::DrawText(this->matrix, *this->font, 0, 0 + this->font->baseline(), this->color, NULL, text.c_str()) << endl;
+     cout << rgb_matrix::DrawText(this->matrix, this->font, 0, 0 + this->font.baseline(), this->color, NULL, text.c_str()) << endl;
     usleep(100000);
         
     }
