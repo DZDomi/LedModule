@@ -17,6 +17,9 @@ int main(int argc, char *argv[]) {
 	Communicator *com = Communicator::getInstance("/tmp/test.sock");
 	com->acceptConnections();
 
+    led->printText("Hello World");
+    return 0;
+    
 	while(1){
         string data;
         try {

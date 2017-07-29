@@ -11,7 +11,7 @@ Led* Led::getInstance(){
 	return instance;
 }
 
-Led::Led() {
+Led::Led() : color(255, 255, 0) {
     RGBMatrix::Options options;
     options.hardware_mapping = "adafruit-hat-pwm";
     options.chain_length = 4;
@@ -19,17 +19,22 @@ Led::Led() {
     rgb_matrix::RuntimeOptions runtime;
     runtime.drop_privileges = 1;
     
-    matrix = rgb_matrix::CreateMatrixFromOptions(options, runtime);
-    matrix->ApplyStaticTransformer(rgb_matrix::UArrangementTransformer(options.parallel));
+    this->matrix = rgb_matrix::CreateMatrixFromOptions(options, runtime);
+    this->matrix->ApplyStaticTransformer(rgb_matrix::UArrangementTransformer(options.parallel));
     
+    this->font->LoadFont("fonts/8x13.bdf");
+    
+    this->matrix->SetBrightness(100);
     
 }
 
 void Led::printText(string text){
-    
+    rgb_matrix::DrawText(this->matrix, *this->font, 0, 0 + this->font->baseline(), this->color, NULL, text.c_str());
+    sleep(10000);
 }
 
 Led::~Led() {
+    matrix->Clear();
     delete matrix;
 }
 
@@ -42,5 +47,6 @@ void Led::setUpInterruptHandler() {
 }
 
 void Led::interrupt(int) {
+    instance->matrix->Clear();
 	delete instance->matrix;
 }

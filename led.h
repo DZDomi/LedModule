@@ -10,9 +10,10 @@
 
 #include "led-matrix.h"
 #include "transformer.h"
+#include "graphics.h"
 
 using namespace std;
-using rgb_matrix::RGBMatrix;
+using namespace rgb_matrix;
 
 class Led {
 	public:
@@ -31,4 +32,6 @@ class Led {
 		static void interrupt(int);
         
         RGBMatrix *matrix;
+        Font *font;
+        Color color;
 };
