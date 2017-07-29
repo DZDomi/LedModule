@@ -31,6 +31,8 @@ class Led {
 		static void setUpInterruptHandler();
 		static void interrupt(int);
         
+        void calculateColor(int *continuum, int *red, int *green, int *blue);
+        
         RGBMatrix *matrix;
         Font *font;
         Color color;
