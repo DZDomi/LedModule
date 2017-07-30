@@ -76,7 +76,6 @@ void Led::prepareThread(string text) {
     thread t = thread(&Led::showText, this, text);
     t.detach();
     this->threadStarted = true;
-    cout << "Starting Thread" << endl;
 }
 
 void Led::calculateColor(int *continuum, int *red, int *green, int *blue){
