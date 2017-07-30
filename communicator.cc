@@ -59,15 +59,12 @@ string Communicator::getRequest() {
 	int bytesRead = -1;
 	while((bytesRead = recv(client, buffer, bufLength, 0)) > 0){
 		data.append(buffer, bytesRead);
-		if(data.at(data.length() - 1) == '\n'){
-			break;
-		}
 	}
 	//Connection closed
 	if(bytesRead == 0){
 		throw std::runtime_error("Connection closed");
 	}
-	data = data.substr(0, data.length() - 1);
+	//data = data.substr(0, data.length() - 1);
 	return data;
 }
 
