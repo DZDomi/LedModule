@@ -54,7 +54,12 @@ void Communicator::acceptConnections() {
 string Communicator::getRequest() {
 	int bufLength = 1024;
 	char buffer[bufLength + 1];
-	string data = "";
+	
+    int contentLength = -1;
+    string data = "";
+    
+    recv(client, &contentLength, sizeof(int), 0);
+    cout << contentLength << endl;
     
 	int bytesRead = -1;
 	while((bytesRead = recv(client, buffer, bufLength, 0)) > 0){
