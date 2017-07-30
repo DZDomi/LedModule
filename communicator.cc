@@ -68,7 +68,7 @@ string Communicator::getRequest() {
         bytesRead += result;
     }
 	
-	return string(buffer);
+	return string(buffer, bytesRead);
 }
 
 Communicator::~Communicator() {
