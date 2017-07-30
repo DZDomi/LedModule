@@ -14,6 +14,10 @@ int main(int argc, char *argv[]) {
     GOOGLE_PROTOBUF_VERIFY_VERSION;
     
     Led *led = Led::getInstance();
+    led->printText("Hello");
+    led->printText("Next Text");
+    return 0;
+    
 	Communicator *com = Communicator::getInstance("/tmp/test.sock");
 	com->acceptConnections();
     

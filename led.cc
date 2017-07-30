@@ -39,7 +39,7 @@ void Led::printText(string text){
     int pos = this->matrix->width();
     while(true){
         
-        this->matrix->Clear();
+        //this->matrix->Clear();
         
         this->calculateColor(&continuum, &red, &green, &blue);
         this->color = Color(red, green, blue);
@@ -52,7 +52,6 @@ void Led::printText(string text){
         }
         usleep(30000);
     }
-    //usleep(100000);
 }
 
 void Led::calculateColor(int *continuum, int *red, int *green, int *blue){
