@@ -66,6 +66,7 @@ void Led::prepareThread() {
     
     this->runningThread = thread(&Led::showText, this, "Hello");
     this->runningThread.detach();
+    this->canceled = false;
 }
 
 void Led::calculateColor(int *continuum, int *red, int *green, int *blue){
