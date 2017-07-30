@@ -66,7 +66,9 @@ string Communicator::getRequest() {
         if(result <= 0){
             throw std::runtime_error("Connection closed");
         }
+        cout << result << endl;
         bytesRead += result;
+        cout << bytesRead << endl;
     }
 	
 	return string(buffer);
