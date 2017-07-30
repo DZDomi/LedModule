@@ -62,6 +62,7 @@ void Led::showText(Led *led, string text){
 void Led::prepareThread(string text) {
     //Tell currently running threads to stop execution
     this->canceled = true;
+    this->runningThread.join();
     cout << "canceled set to true" << endl;
     
     this->runningThread = thread(&Led::showText, this, text);
