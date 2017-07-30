@@ -43,7 +43,7 @@ void Led::showText(Led *led, string text){
     std::unique_lock<std::mutex> lck(m);
     int continuum = rand() % 1000 + 1, red, green, blue;
     int pos = led->matrix->width();
-    while(!led->canceled){
+    while(!cond_var.wait_for(lck, std::chrono::microseconds(300), []{ return true; })){
         
         led->matrix->Clear();
         
@@ -57,10 +57,7 @@ void Led::showText(Led *led, string text){
             pos = led->matrix->width();
             //break;
         }
-        usleep(30000);
     }
-    cout << "Notifiying" << endl;
-    cond_var.notify_one();
     cout << "Stopping" << endl;
 }
 
@@ -71,7 +68,7 @@ void Led::prepareThread(string text) {
         cout << "canceled set to true" << endl;
         std::unique_lock<std::mutex> lck(m);
         cout << "Lock" << endl;
-        cond_var.wait(lck);
+        cond_var.notify_one();
         cout << "Got Message from Thread" << endl;
         this->canceled = false;
     }
