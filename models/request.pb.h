@@ -533,12 +533,30 @@ class GifRequest : public ::google::protobuf::Message /* @@protoc_insertion_poin
 
   // accessors -------------------------------------------------------
 
+  // required bytes gif = 1;
+  bool has_gif() const;
+  void clear_gif();
+  static const int kGifFieldNumber = 1;
+  const ::std::string& gif() const;
+  void set_gif(const ::std::string& value);
+  #if LANG_CXX11
+  void set_gif(::std::string&& value);
+  #endif
+  void set_gif(const char* value);
+  void set_gif(const void* value, size_t size);
+  ::std::string* mutable_gif();
+  ::std::string* release_gif();
+  void set_allocated_gif(::std::string* gif);
+
   // @@protoc_insertion_point(class_scope:ledmodule.GifRequest)
  private:
+  void set_has_gif();
+  void clear_has_gif();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable int _cached_size_;
+  ::google::protobuf::internal::ArenaStringPtr gif_;
   friend struct protobuf_request_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
@@ -973,6 +991,69 @@ inline void TextRequest::set_allocated_text(::std::string* text) {
 // -------------------------------------------------------------------
 
 // GifRequest
+
+// required bytes gif = 1;
+inline bool GifRequest::has_gif() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void GifRequest::set_has_gif() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void GifRequest::clear_has_gif() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void GifRequest::clear_gif() {
+  gif_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_gif();
+}
+inline const ::std::string& GifRequest::gif() const {
+  // @@protoc_insertion_point(field_get:ledmodule.GifRequest.gif)
+  return gif_.GetNoArena();
+}
+inline void GifRequest::set_gif(const ::std::string& value) {
+  set_has_gif();
+  gif_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:ledmodule.GifRequest.gif)
+}
+#if LANG_CXX11
+inline void GifRequest::set_gif(::std::string&& value) {
+  set_has_gif();
+  gif_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:ledmodule.GifRequest.gif)
+}
+#endif
+inline void GifRequest::set_gif(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_gif();
+  gif_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ledmodule.GifRequest.gif)
+}
+inline void GifRequest::set_gif(const void* value, size_t size) {
+  set_has_gif();
+  gif_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ledmodule.GifRequest.gif)
+}
+inline ::std::string* GifRequest::mutable_gif() {
+  set_has_gif();
+  // @@protoc_insertion_point(field_mutable:ledmodule.GifRequest.gif)
+  return gif_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* GifRequest::release_gif() {
+  // @@protoc_insertion_point(field_release:ledmodule.GifRequest.gif)
+  clear_has_gif();
+  return gif_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void GifRequest::set_allocated_gif(::std::string* gif) {
+  if (gif != NULL) {
+    set_has_gif();
+  } else {
+    clear_has_gif();
+  }
+  gif_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), gif);
+  // @@protoc_insertion_point(field_set_allocated:ledmodule.GifRequest.gif)
+}
 
 // -------------------------------------------------------------------
 

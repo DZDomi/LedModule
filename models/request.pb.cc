@@ -92,6 +92,8 @@ const ::google::protobuf::uint32 TableStruct::offsets[] = {
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GifRequest, gif_),
+  0,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(VideoRequest, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(VideoRequest, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -103,8 +105,8 @@ static const ::google::protobuf::internal::MigrationSchema schemas[] = {
   { 0, 11, sizeof(Request)},
   { 17, 23, sizeof(TextRequest)},
   { 24, 29, sizeof(PictureRequest)},
-  { 29, 34, sizeof(GifRequest)},
-  { 34, 39, sizeof(VideoRequest)},
+  { 29, 35, sizeof(GifRequest)},
+  { 36, 41, sizeof(VideoRequest)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -186,11 +188,11 @@ void AddDescriptorsImpl() {
       "videoRequest\030\006 \001(\0132\027.ledmodule.VideoRequ"
       "est\"3\n\006Action\022\010\n\004TEXT\020\001\022\013\n\007PICTURE\020\002\022\007\n\003"
       "GIF\020\003\022\t\n\005VIDEO\020\004\"\033\n\013TextRequest\022\014\n\004text\030"
-      "\001 \002(\t\"\020\n\016PictureRequest\"\014\n\nGifRequest\"\016\n"
-      "\014VideoRequest"
+      "\001 \002(\t\"\020\n\016PictureRequest\"\031\n\nGifRequest\022\013\n"
+      "\003gif\030\001 \002(\014\"\016\n\014VideoRequest"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 413);
+      descriptor, 426);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "request.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&TableStruct::Shutdown);
@@ -742,6 +744,9 @@ bool Request::IsInitialized() const {
   if ((_has_bits_[0] & 0x00000021) != 0x00000021) return false;
   if (has_textrequest()) {
     if (!this->textrequest_->IsInitialized()) return false;
+  }
+  if (has_gifrequest()) {
+    if (!this->gifrequest_->IsInitialized()) return false;
   }
   return true;
 }
@@ -1565,6 +1570,7 @@ void PictureRequest::InternalSwap(PictureRequest* other) {
 // ===================================================================
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int GifRequest::kGifFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 GifRequest::GifRequest()
@@ -1581,11 +1587,16 @@ GifRequest::GifRequest(const GifRequest& from)
       _has_bits_(from._has_bits_),
       _cached_size_(0) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
+  gif_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_gif()) {
+    gif_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.gif_);
+  }
   // @@protoc_insertion_point(copy_constructor:ledmodule.GifRequest)
 }
 
 void GifRequest::SharedCtor() {
   _cached_size_ = 0;
+  gif_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
 GifRequest::~GifRequest() {
@@ -1594,6 +1605,7 @@ GifRequest::~GifRequest() {
 }
 
 void GifRequest::SharedDtor() {
+  gif_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
 void GifRequest::SetCachedSize(int size) const {
@@ -1621,6 +1633,10 @@ GifRequest* GifRequest::New(::google::protobuf::Arena* arena) const {
 
 void GifRequest::Clear() {
 // @@protoc_insertion_point(message_clear_start:ledmodule.GifRequest)
+  if (has_gif()) {
+    GOOGLE_DCHECK(!gif_.IsDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited()));
+    (*gif_.UnsafeRawStringPointer())->clear();
+  }
   _has_bits_.Clear();
   _internal_metadata_.Clear();
 }
@@ -1634,14 +1650,31 @@ bool GifRequest::MergePartialFromCodedStream(
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
-  handle_unusual:
-    if (tag == 0 ||
-        ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-        ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-      goto success;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // required bytes gif = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(10u)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_gif()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
     }
-    DO_(::google::protobuf::internal::WireFormat::SkipField(
-          input, tag, mutable_unknown_fields()));
   }
 success:
   // @@protoc_insertion_point(parse_success:ledmodule.GifRequest)
@@ -1658,6 +1691,13 @@ void GifRequest::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
+  cached_has_bits = _has_bits_[0];
+  // required bytes gif = 1;
+  if (cached_has_bits & 0x00000001u) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      1, this->gif(), output);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -1671,6 +1711,14 @@ void GifRequest::SerializeWithCachedSizes(
   // @@protoc_insertion_point(serialize_to_array_start:ledmodule.GifRequest)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
+
+  cached_has_bits = _has_bits_[0];
+  // required bytes gif = 1;
+  if (cached_has_bits & 0x00000001u) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        1, this->gif(), target);
+  }
 
   if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
@@ -1688,6 +1736,12 @@ size_t GifRequest::ByteSizeLong() const {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         unknown_fields());
+  }
+  // required bytes gif = 1;
+  if (has_gif()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::BytesSize(
+        this->gif());
   }
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
@@ -1718,6 +1772,10 @@ void GifRequest::MergeFrom(const GifRequest& from) {
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
+  if (from.has_gif()) {
+    set_has_gif();
+    gif_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.gif_);
+  }
 }
 
 void GifRequest::CopyFrom(const ::google::protobuf::Message& from) {
@@ -1735,6 +1793,7 @@ void GifRequest::CopyFrom(const GifRequest& from) {
 }
 
 bool GifRequest::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
   return true;
 }
 
@@ -1743,6 +1802,7 @@ void GifRequest::Swap(GifRequest* other) {
   InternalSwap(other);
 }
 void GifRequest::InternalSwap(GifRequest* other) {
+  gif_.Swap(&other->gif_);
   std::swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
@@ -1755,6 +1815,69 @@ void GifRequest::InternalSwap(GifRequest* other) {
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
 // GifRequest
+
+// required bytes gif = 1;
+bool GifRequest::has_gif() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+void GifRequest::set_has_gif() {
+  _has_bits_[0] |= 0x00000001u;
+}
+void GifRequest::clear_has_gif() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+void GifRequest::clear_gif() {
+  gif_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_gif();
+}
+const ::std::string& GifRequest::gif() const {
+  // @@protoc_insertion_point(field_get:ledmodule.GifRequest.gif)
+  return gif_.GetNoArena();
+}
+void GifRequest::set_gif(const ::std::string& value) {
+  set_has_gif();
+  gif_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:ledmodule.GifRequest.gif)
+}
+#if LANG_CXX11
+void GifRequest::set_gif(::std::string&& value) {
+  set_has_gif();
+  gif_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:ledmodule.GifRequest.gif)
+}
+#endif
+void GifRequest::set_gif(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_gif();
+  gif_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ledmodule.GifRequest.gif)
+}
+void GifRequest::set_gif(const void* value, size_t size) {
+  set_has_gif();
+  gif_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ledmodule.GifRequest.gif)
+}
+::std::string* GifRequest::mutable_gif() {
+  set_has_gif();
+  // @@protoc_insertion_point(field_mutable:ledmodule.GifRequest.gif)
+  return gif_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+::std::string* GifRequest::release_gif() {
+  // @@protoc_insertion_point(field_release:ledmodule.GifRequest.gif)
+  clear_has_gif();
+  return gif_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+void GifRequest::set_allocated_gif(::std::string* gif) {
+  if (gif != NULL) {
+    set_has_gif();
+  } else {
+    clear_has_gif();
+  }
+  gif_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), gif);
+  // @@protoc_insertion_point(field_set_allocated:ledmodule.GifRequest.gif)
+}
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 
