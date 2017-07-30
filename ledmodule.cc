@@ -1,5 +1,6 @@
 #include <iostream>
 #include <sstream>
+#include <fstream>
 
 #include "led-matrix.h"
 
@@ -41,11 +42,17 @@ int main(int argc, char *argv[]) {
 				cout << "picture" << endl;
 				//TODO: Implement Me
 				break;
-			case ledmodule::Request::GIF:
-                cout << "1 GIF:" << request.gifrequest().gif() << endl;
+			case ledmodule::Request::GIF: {
+                ofstream myfile;
+                myfile.open ("example.gif");
+                myfile << request.gifrequest().gif();
+                myfile.close();
+                //return 0;
+                //cout << "1 GIF:" << request.gifrequest().gif() << endl;
 				//cout << "gif" << endl;
 				//TODO: Implement Me
 				break;
+            }
 			case ledmodule::Request::VIDEO:
 				cout << "video" << endl;
 				//TODO: Implement Me
