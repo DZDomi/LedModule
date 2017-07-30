@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
     
     Led *led = Led::getInstance();
     led->printText("Hello");
-    //led->printText("Next Text");
+    led->printText("Next Text");
     return 0;
     
 	Communicator *com = Communicator::getInstance("/tmp/test.sock");
