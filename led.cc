@@ -58,23 +58,20 @@ void Led::showText(Led *led, string text){
             //break;
         }
     }
+    //Tell the main thread that we finished execution
     cond_var.notify_one();
-    cout << "Stopping" << endl;
 }
 
 void Led::prepareThread(string text) {
     //Tell currently running thread to stop execution
     if(this->threadStarted){
         this->canceled = true;
-        cout << "canceled set to true" << endl;
         std::unique_lock<std::mutex> lck(m);
-        cout << "Lock" << endl;
+        //Tell the current running thread to check the canceled variable
         cond_var.notify_one();
-        cout << "Notified" << endl;
+        //Wait for the thread to stop executing
         cond_var.wait(lck);
         this->canceled = false;
-        cout << "Got Message from Thread" << endl;
-        //this->canceled = false;
     }
     thread t = thread(&Led::showText, this, text);
     t.detach();
