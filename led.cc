@@ -58,7 +58,7 @@ void Led::showText(Led *led, string text){
             //break;
         }
     }
-    led->canceled = false;
+    cond_var.notify_one();
     cout << "Stopping" << endl;
 }
 
@@ -70,7 +70,9 @@ void Led::prepareThread(string text) {
         std::unique_lock<std::mutex> lck(m);
         cout << "Lock" << endl;
         cond_var.notify_one();
-        usleep(300000);
+        cout << "Notified" << endl;
+        cond_var.wait(lck);
+        this->canceled = false;
         cout << "Got Message from Thread" << endl;
         //this->canceled = false;
     }
