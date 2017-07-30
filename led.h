@@ -35,7 +35,7 @@ class Led {
         static void showText(Led *led, string text);
         
         void calculateColor(int *continuum, int *red, int *green, int *blue);
-        void prepareThread();
+        void prepareThread(string text);
         
         RGBMatrix *matrix;
         Font font;

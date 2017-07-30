@@ -34,7 +34,7 @@ Led::Led() : color(255, 255, 0) {
 }
 
 void Led::printText(string text){
-    this->prepareThread();
+    this->prepareThread(text);
 }
 
 void Led::showText(Led *led, string text){
@@ -59,12 +59,12 @@ void Led::showText(Led *led, string text){
     cout << "Stopping" << endl;
 }
 
-void Led::prepareThread() {
+void Led::prepareThread(string text) {
     //Tell currently running threads to stop execution
     this->canceled = true;
     cout << "canceled set to true" << endl;
     
-    this->runningThread = thread(&Led::showText, this, "Hello");
+    this->runningThread = thread(&Led::showText, this, text);
     this->runningThread.detach();
     this->canceled = false;
 }
