@@ -61,6 +61,7 @@ string Communicator::getRequest() {
 	char buffer[contentLength + 1];
     
 	int bytesRead = recv(client, buffer, contentLength, 0);
+    cout << bytesRead << endl;
 	//Connection closed
 	if(bytesRead <= 0){
 		throw std::runtime_error("Connection closed");
