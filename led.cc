@@ -66,7 +66,7 @@ void Led::prepareThread() {
     cout << "setting canceled true" << endl;
     this->canceled = true;
     cout << "waiting for terminate" << endl;
-    this->runningThread.join();
+    //this->runningThread.join();
     cout << "thread terminated" << endl;
     cout << "Finished Tread" << endl;
 }
