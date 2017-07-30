@@ -52,25 +52,21 @@ void Communicator::acceptConnections() {
 }
 
 string Communicator::getRequest() {
-	int bufLength = 1024;
-	char buffer[bufLength + 1];
-	
-    int contentLength = -1;
-    string data = "";
     
+    int contentLength = -1;
+    //Get content length of the message
     recv(client, &contentLength, sizeof(int), 0);
     cout << contentLength << endl;
     
-	int bytesRead = -1;
-	while((bytesRead = recv(client, buffer, bufLength, 0)) > 0){
-		data.append(buffer, bytesRead);
-	}
+	char buffer[contentLength + 1];
+    
+	int bytesRead = recv(client, buffer, contentLength, 0);
 	//Connection closed
-	if(bytesRead == 0){
+	if(bytesRead <= 0){
 		throw std::runtime_error("Connection closed");
 	}
-	//data = data.substr(0, data.length() - 1);
-	return data;
+	
+	return string(buffer);
 }
 
 Communicator::~Communicator() {
