@@ -56,7 +56,7 @@ void Led::showText(Led *led, string text){
         }
         usleep(30000);
     }
-    terminate();
+    //terminate();
 }
 
 void Led::prepareThread() {
