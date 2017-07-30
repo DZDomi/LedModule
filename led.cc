@@ -58,6 +58,7 @@ void Led::showText(Led *led, string text){
             //break;
         }
     }
+    led->canceled = false;
     cout << "Stopping" << endl;
 }
 
@@ -71,7 +72,7 @@ void Led::prepareThread(string text) {
         cond_var.notify_one();
         usleep(300000);
         cout << "Got Message from Thread" << endl;
-        this->canceled = false;
+        //this->canceled = false;
     }
     thread t = thread(&Led::showText, this, text);
     t.detach();
