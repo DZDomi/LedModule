@@ -28,10 +28,30 @@ Led::Led() : color(255, 255, 0) {
     
     this->matrix->SetBrightness(100);
     
+    //Initialize random number generator
+    srand(time(NULL));
+    
 }
 
 void Led::printText(string text){
-    rgb_matrix::DrawText(this->matrix, this->font, 0, (this->font.baseline() + this->matrix->height()) / 2, this->color, NULL, text.c_str());
+    
+    int continuum = rand() % 1000 + 1, red, green, blue;
+    int pos = this->matrix->width();
+    while(true){
+        
+        this->matrix->Clear();
+        
+        this->calculateColor(&continuum, &red, &green, &blue);
+        this->color = Color(red, green, blue);
+        
+        int len = rgb_matrix::DrawText(this->matrix, this->font, pos, (this->font.baseline() + this->matrix->height()) / 2, this->color, NULL, text.c_str());
+        
+        pos -= 1;
+        if(pos + len < 0){
+            pos = this->matrix->width();
+        }
+        usleep(30000);
+    }
     //usleep(100000);
 }
 
