@@ -59,7 +59,7 @@ void Led::showText(Led *led, string text){
         }
         usleep(30000);
     }
-    cond_var.notify_one();
+    cond_var.notify_all();
     cout << "Stopping" << endl;
 }
 
