@@ -14,10 +14,6 @@ int main(int argc, char *argv[]) {
     GOOGLE_PROTOBUF_VERIFY_VERSION;
     
     Led *led = Led::getInstance();
-    //led->printText("Hello I bim 1 langer text LOL");
-    //usleep(3000000);
-    //led->printText("Next Text");
-    
 	Communicator *com = Communicator::getInstance("/tmp/test.sock");
 	com->acceptConnections();
     
@@ -46,6 +42,7 @@ int main(int argc, char *argv[]) {
 				//TODO: Implement Me
 				break;
 			case ledmodule::Request::GIF:
+                cout << request.gifrequest().gif() << endl;
 				cout << "gif" << endl;
 				//TODO: Implement Me
 				break;
