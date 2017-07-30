@@ -43,7 +43,7 @@ void Led::showText(Led *led, string text){
     std::unique_lock<std::mutex> lck(m);
     int continuum = rand() % 1000 + 1, red, green, blue;
     int pos = led->matrix->width();
-    while(!cond_var.wait_for(lck, std::chrono::microseconds(300000), []{ return false; })){
+    while(!cond_var.wait_for(lck, std::chrono::microseconds(30000), []{ return false; })){
         
         led->matrix->Clear();
         
