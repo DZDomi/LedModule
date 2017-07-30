@@ -56,20 +56,16 @@ void Led::showText(Led *led, string text){
         }
         usleep(30000);
     }
-    //terminate();
+    cout << "Stopping" << endl;
 }
 
 void Led::prepareThread() {
+    //Tell currently running threads to stop execution
+    this->canceled = true;
+    cout << "canceled set to true" << endl;
+    
     this->runningThread = thread(&Led::showText, this, "Hello");
     this->runningThread.detach();
-    cout << "Waiting display" << endl;
-    usleep(300000);
-    cout << "setting canceled true" << endl;
-    this->canceled = true;
-    cout << "waiting for terminate" << endl;
-    //this->runningThread.join();
-    cout << "thread terminated" << endl;
-    cout << "Finished Tread" << endl;
 }
 
 void Led::calculateColor(int *continuum, int *red, int *green, int *blue){

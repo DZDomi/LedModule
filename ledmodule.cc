@@ -14,7 +14,8 @@ int main(int argc, char *argv[]) {
     GOOGLE_PROTOBUF_VERIFY_VERSION;
     
     Led *led = Led::getInstance();
-    led->printText("Hello");
+    led->printText("Hello I bim 1 langer text LOL");
+    usleep(3000000);
     led->printText("Next Text");
     return 0;
     
