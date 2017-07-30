@@ -58,14 +58,16 @@ string Communicator::getRequest() {
     recv(client, &contentLength, sizeof(int), 0);
     cout << contentLength << endl;
     
+    int bytesRead = 0;
 	char buffer[contentLength + 1];
     
-	int bytesRead = recv(client, buffer, contentLength, 0);
-    cout << bytesRead << endl;
-	//Connection closed
-	if(bytesRead <= 0){
-		throw std::runtime_error("Connection closed");
-	}
+    while(bytesRead < contentLength){
+        int result = recv(client, buffer + bytesRead, contentLength - bytesRead, 0);
+        if(result <= 0){
+            throw std::runtime_error("Connection closed");
+        }
+        bytesRead += result;
+    }
 	
 	return string(buffer);
 }
