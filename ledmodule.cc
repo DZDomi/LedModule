@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
 				//TODO: Implement Me
 				break;
 			case ledmodule::Request::GIF:
-                cout << request.gifrequest().gif() << endl;
+                cout << "1 GIF:" << request.gifrequest().gif() << endl;
 				cout << "gif" << endl;
 				//TODO: Implement Me
 				break;
