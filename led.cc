@@ -48,7 +48,7 @@ void Led::printText(string text){
         
         pos -= 1;
         if(pos + len < 0){
-            pos = this->matrix->width();
+            break;
         }
         usleep(30000);
     }
