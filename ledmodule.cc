@@ -17,7 +17,6 @@ int main(int argc, char *argv[]) {
     led->printText("Hello I bim 1 langer text LOL");
     usleep(3000000);
     led->printText("Next Text");
-    return 0;
     
 	Communicator *com = Communicator::getInstance("/tmp/test.sock");
 	com->acceptConnections();
