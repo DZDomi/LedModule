@@ -7,6 +7,7 @@
 #include <sys/un.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#include <thread>
 
 #include "led-matrix.h"
 #include "transformer.h"
@@ -31,9 +32,14 @@ class Led {
 		static void setUpInterruptHandler();
 		static void interrupt(int);
         
+        static void showText(Led *led, string text);
+        
         void calculateColor(int *continuum, int *red, int *green, int *blue);
+        void prepareThread();
         
         RGBMatrix *matrix;
         Font font;
         Color color;
+        
+        thread runningThread;
 };

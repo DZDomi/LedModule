@@ -34,17 +34,20 @@ Led::Led() : color(255, 255, 0) {
 }
 
 void Led::printText(string text){
-    
+    this->prepareThread();
+}
+
+void Led::showText(Led *led, string text){
     int continuum = rand() % 1000 + 1, red, green, blue;
-    int pos = this->matrix->width();
+    int pos = led->matrix->width();
     while(true){
         
-        //this->matrix->Clear();
+        led->matrix->Clear();
         
-        this->calculateColor(&continuum, &red, &green, &blue);
-        this->color = Color(red, green, blue);
+        led->calculateColor(&continuum, &red, &green, &blue);
+        led->color = Color(red, green, blue);
         
-        int len = rgb_matrix::DrawText(this->matrix, this->font, pos, (this->font.baseline() + this->matrix->height()) / 2, this->color, NULL, text.c_str());
+        int len = rgb_matrix::DrawText(led->matrix, led->font, pos, (led->font.baseline() + led->matrix->height()) / 2, led->color, NULL, text.c_str());
         
         pos -= 1;
         if(pos + len < 0){
@@ -52,6 +55,13 @@ void Led::printText(string text){
         }
         usleep(30000);
     }
+}
+
+void Led::prepareThread() {
+    this->runningThread = thread(&Led::showText, this, "Hello");
+    cout << "Waiting for Thread" << endl;
+    this->runningThread.join();
+    cout << "Finished Tread" << endl;
 }
 
 void Led::calculateColor(int *continuum, int *red, int *green, int *blue){
