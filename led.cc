@@ -40,7 +40,7 @@ void Led::printText(string text){
 void Led::showText(Led *led, string text){
     int continuum = rand() % 1000 + 1, red, green, blue;
     int pos = led->matrix->width();
-    while(true){
+    while(!led->canceled){
         
         led->matrix->Clear();
         
@@ -51,16 +51,21 @@ void Led::showText(Led *led, string text){
         
         pos -= 1;
         if(pos + len < 0){
-            break;
+            pos = led->matrix->width();
+            //break;
         }
         usleep(30000);
     }
+    terminate();
 }
 
 void Led::prepareThread() {
     this->runningThread = thread(&Led::showText, this, "Hello");
     cout << "Waiting for Thread" << endl;
+    usleep(100000);
+    this->canceled = true;
     this->runningThread.join();
+    cout << "thread terminated" << endl;
     cout << "Finished Tread" << endl;
 }
 

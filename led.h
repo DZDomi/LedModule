@@ -42,4 +42,5 @@ class Led {
         Color color;
         
         thread runningThread;
+        bool canceled = false;
 };
