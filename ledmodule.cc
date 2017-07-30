@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
             break;
         }
         
-        cout << data << endl;
+        //cout << data << endl;
         
         ledmodule::Request request;
         request.ParseFromString(data);
