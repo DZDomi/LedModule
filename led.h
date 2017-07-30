@@ -8,6 +8,8 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <thread>
+#include <mutex>
+#include <condition_variable>
 
 #include "led-matrix.h"
 #include "transformer.h"
@@ -41,6 +43,6 @@ class Led {
         Font font;
         Color color;
         
-        thread runningThread;
+        bool threadStarted = false;
         bool canceled = false;
 };

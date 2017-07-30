@@ -1,6 +1,8 @@
 #include "led.h"
 
 Led* Led::instance = nullptr;
+std::mutex m;
+std::condition_variable cond_var;
 
 Led* Led::getInstance(){
 	if(instance != nullptr){
@@ -38,6 +40,7 @@ void Led::printText(string text){
 }
 
 void Led::showText(Led *led, string text){
+    std::unique_lock<std::mutex> lck(m);
     int continuum = rand() % 1000 + 1, red, green, blue;
     int pos = led->matrix->width();
     while(!led->canceled){
@@ -56,18 +59,23 @@ void Led::showText(Led *led, string text){
         }
         usleep(30000);
     }
+    cond_var.notify_one();
     cout << "Stopping" << endl;
 }
 
 void Led::prepareThread(string text) {
     //Tell currently running threads to stop execution
-    this->canceled = true;
-    this->runningThread.join();
-    cout << "canceled set to true" << endl;
-    
-    this->runningThread = thread(&Led::showText, this, text);
-    this->runningThread.detach();
-    this->canceled = false;
+    if(this->threadStarted){
+        this->canceled = true;
+        cout << "canceled set to true" << endl;
+        std::unique_lock<std::mutex> lck(m);
+        cond_var.wait(lck);
+        cout << "Got Message from Thread" << endl;
+        this->canceled = false;
+    }
+    thread t = thread(&Led::showText, this, text);
+    t.detach();
+    cout << "Starting Thread" << endl;
 }
 
 void Led::calculateColor(int *continuum, int *red, int *green, int *blue){
