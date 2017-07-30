@@ -61,9 +61,11 @@ void Led::showText(Led *led, string text){
 
 void Led::prepareThread() {
     this->runningThread = thread(&Led::showText, this, "Hello");
-    cout << "Waiting for Thread" << endl;
-    usleep(100000);
+    cout << "Waiting display" << endl;
+    usleep(300000);
+    cout << "setting canceled true" << endl;
     this->canceled = true;
+    cout << "waiting for terminate" << endl;
     this->runningThread.join();
     cout << "thread terminated" << endl;
     cout << "Finished Tread" << endl;
