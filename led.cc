@@ -69,6 +69,7 @@ void Led::prepareThread(string text) {
         std::unique_lock<std::mutex> lck(m);
         cout << "Lock" << endl;
         cond_var.notify_one();
+        usleep(300000);
         cout << "Got Message from Thread" << endl;
         this->canceled = false;
     }
