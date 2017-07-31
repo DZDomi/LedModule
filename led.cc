@@ -68,14 +68,18 @@ void Led::showText(Led *led, string text){
     std::unique_lock<std::mutex> lck(m);
     int continuum = rand() % 1000 + 1, red, green, blue;
     int pos = led->matrix->width();
+    cout << "Got text started" << endl;
     while(!cond_var.wait_for(lck, std::chrono::microseconds(30000), [&]{ return led->canceled; })){
         
+        cout << "Clearing matrix" << endl;
         led->matrix->Clear();
         
         led->calculateColor(&continuum, &red, &green, &blue);
         led->color = Color(red, green, blue);
         
         int len = rgb_matrix::DrawText(led->matrix, led->font, pos, (led->font.baseline() + led->matrix->height()) / 2, led->color, NULL, text.c_str());
+        
+        cout << "Drwaing text" << endl;
         
         pos -= 1;
         if(pos + len < 0){
