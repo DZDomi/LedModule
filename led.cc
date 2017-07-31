@@ -120,11 +120,13 @@ void Led::showPicture(Led *led, string data){
             storeInStream(img, delay_time_us, offScreenCanvas, &out);
       }
       
-      displayAnimation(fileInfo, offScreenCanvas);
-        
+        displayAnimation(fileInfo, offScreenCanvas);
+        cout << "Animation finished" << endl;
     }
+    cout << "Out of loop" << endl;
     //Tell the main thread that we finished execution
     cond_var.notify_one();
+    cout << "Notified" << endl;
 }
 
 void Led::displayAnimation(const FileInfo *fileInfo, FrameCanvas *offscreen_canvas) {
@@ -141,6 +143,7 @@ void Led::displayAnimation(const FileInfo *fileInfo, FrameCanvas *offscreen_canv
       offscreen_canvas = instance->matrix->SwapOnVSync(offscreen_canvas);
       const tmillis_t time_already_spent = getTimeInMillis() - start_wait_ms;
       sleepMillis(anim_delay_ms - time_already_spent);
+      cout << "Sleeping finished" << endl;
     }
     reader.Rewind();
   }
