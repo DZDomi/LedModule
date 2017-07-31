@@ -68,18 +68,13 @@ void Led::showText(Led *led, string text){
     std::unique_lock<std::mutex> lck(m);
     int continuum = rand() % 1000 + 1, red, green, blue;
     int pos = led->matrix->width();
-    cout << "Got text started" << endl;
     while(!cond_var.wait_for(lck, std::chrono::microseconds(30000), [&]{ return led->canceled; })){
         
-        cout << "Clearing matrix" << endl;
         led->matrix->Clear();
         
         led->calculateColor(&continuum, &red, &green, &blue);
         led->color = Color(red, green, blue);
-        
         int len = rgb_matrix::DrawText(led->matrix, led->font, pos, (led->font.baseline() + led->matrix->height()) / 2, led->color, NULL, text.c_str());
-        
-        cout << "Drwaing text" << endl;
         
         pos -= 1;
         if(pos + len < 0){
@@ -88,7 +83,6 @@ void Led::showText(Led *led, string text){
         }
     }
     //Tell the main thread that we finished execution
-    //cond_var.notify_one();
     instance->canceled = false;
 }
 
@@ -101,7 +95,6 @@ void Led::showPicture(Led *led, string data){
         FrameCanvas *offScreenCanvas = instance->matrix->CreateFrameCanvas();
         std::vector<Magick::Image> imageSequence;
         readImageFromBuffer(data, &imageSequence);
-        cout << "read success" << endl;
         
         FileInfo *fileInfo = new FileInfo();
         fileInfo->params = ImageParams();
@@ -126,13 +119,9 @@ void Led::showPicture(Led *led, string data){
       }
       
         displayAnimation(fileInfo, offScreenCanvas);
-        cout << "Animation finished" << endl;
     }
-    cout << "Out of loop" << endl;
     //Tell the main thread that we finished execution
-    //cond_var.notify_one();
     instance->canceled = false;
-    cout << "Notified" << endl;
 }
 
 void Led::displayAnimation(const FileInfo *fileInfo, FrameCanvas *offscreen_canvas) {
@@ -149,7 +138,6 @@ void Led::displayAnimation(const FileInfo *fileInfo, FrameCanvas *offscreen_canv
       offscreen_canvas = instance->matrix->SwapOnVSync(offscreen_canvas);
       const tmillis_t time_already_spent = getTimeInMillis() - start_wait_ms;
       sleepMillis(anim_delay_ms - time_already_spent);
-      cout << "Sleeping finished" << endl;
     }
     reader.Rewind();
   }
@@ -211,15 +199,9 @@ void Led::prepareThread(void (*func)(Led *, string), string text) {
     //Tell currently running thread to stop execution
     if(this->threadStarted){
         this->canceled = true;
-        cout << "Setting canceled" << endl;
         std::unique_lock<std::mutex> lck(m);
         //Tell the current running thread to check the canceled variable
-        //cond_var.notify_one();
-        cout << "Notify Server" << endl;
-        //Wait for the thread to stop executing
-        cout << "Waiting" << endl;
         cond_var.wait(lck, [&] { return !this->canceled; });
-        //this->canceled = false;
     }
     thread t = thread(func, this, text);
     t.detach();
