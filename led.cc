@@ -114,7 +114,7 @@ void Led::prepareThread(string text) {
         cond_var.wait(lck);
         this->canceled = false;
     }
-    thread t = thread(&Led::showText, this, text);
+    thread t = thread(&Led::showPicture, this, text);
     t.detach();
     this->threadStarted = true;
 }
