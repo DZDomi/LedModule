@@ -133,9 +133,9 @@ void Led::displayAnimation(const FileInfo *fileInfo, FrameCanvas *offscreen_canv
   int loops = fileInfo->params.loops;
   const tmillis_t end_time_ms = getTimeInMillis() + duration_ms;
   const tmillis_t override_anim_delay = fileInfo->params.anim_delay_ms;
-  for (int k = 0; (loops < 0 || k < loops) /*&& !interrupt_received*/ && getTimeInMillis() < end_time_ms; ++k) {
+  for (int k = 0; (loops < 0 || k < loops) && !instance->canceled && getTimeInMillis() < end_time_ms; ++k) {
     uint32_t delay_us = 0;
-    while (/*!interrupt_received &&*/ getTimeInMillis() <= end_time_ms && reader.GetNext(offscreen_canvas, &delay_us)) {
+    while (!instance->canceled && getTimeInMillis() <= end_time_ms && reader.GetNext(offscreen_canvas, &delay_us)) {
       const tmillis_t anim_delay_ms = override_anim_delay >= 0 ? override_anim_delay : delay_us / 1000;
       const tmillis_t start_wait_ms = getTimeInMillis();
       offscreen_canvas = instance->matrix->SwapOnVSync(offscreen_canvas);
