@@ -76,6 +76,7 @@ void Led::showPicture(Led *led, string data){
         led->matrix->Clear();
         std::vector<Magick::Image> image_sequence;
         readImageFromBuffer(data, &image_sequence);
+        cout << "read success" << endl;
         
     }
     //Tell the main thread that we finished execution
