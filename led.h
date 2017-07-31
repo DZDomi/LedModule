@@ -11,6 +11,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <chrono>
+#include <sys/time.h>
 
 #include <Magick++.h>
 #include <magick/image.h>
@@ -18,9 +19,14 @@
 #include "led-matrix.h"
 #include "transformer.h"
 #include "graphics.h"
+#include "content-streamer.h"
 
 using namespace std;
 using namespace rgb_matrix;
+
+typedef int64_t tmillis_t;
+struct ImageParams;
+struct FileInfo;
 
 class Led {
 	public:
@@ -46,6 +52,10 @@ class Led {
         void prepareThread(string text);
         
         static void readImageFromBuffer(string data, std::vector<Magick::Image> *result);
+        static void storeInStream(const Magick::Image &img, int delay_time_us, FrameCanvas *scratch, StreamWriter *output);
+        static void displayAnimation(const FileInfo *fileInfo, FrameCanvas *offscreen_canvas);
+        static tmillis_t getTimeInMillis();
+        static void sleepMillis(tmillis_t milli_seconds);
         
         RGBMatrix *matrix;
         Font font;

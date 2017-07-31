@@ -4,6 +4,24 @@ Led* Led::instance = nullptr;
 std::mutex m;
 std::condition_variable cond_var;
 
+typedef int64_t tmillis_t;
+static const tmillis_t distant_future = (1LL<<40); // that is a while.
+
+struct ImageParams {
+    ImageParams() : anim_duration_ms(distant_future), wait_ms(1500),
+                    anim_delay_ms(-1), loops(-1) {}
+    tmillis_t anim_duration_ms;  // If this is an animation, duration to show.
+    tmillis_t wait_ms;           // Regular image: duration to show.
+    tmillis_t anim_delay_ms;     // Animation delay override.
+    int loops;
+};
+
+struct FileInfo {
+    ImageParams params;      // Each file might have specific timing settings
+    bool is_multi_frame;
+    StreamIO *content_stream;
+};
+
 Led* Led::getInstance(){
 	if(instance != nullptr){
 		return instance;
@@ -74,13 +92,74 @@ void Led::showPicture(Led *led, string data){
     while(!cond_var.wait_for(lck, std::chrono::microseconds(30000), [&]{ return led->canceled; })){
         
         led->matrix->Clear();
-        std::vector<Magick::Image> image_sequence;
-        readImageFromBuffer(data, &image_sequence);
+        
+        FrameCanvas *offScreenCanvas = instance->matrix->CreateFrameCanvas();
+        std::vector<Magick::Image> imageSequence;
+        readImageFromBuffer(data, &imageSequence);
         cout << "read success" << endl;
+        
+        FileInfo *fileInfo = new FileInfo();
+        fileInfo->params = ImageParams();
+        fileInfo->is_multi_frame = imageSequence.size() > 1;
+        fileInfo->content_stream = new MemStreamIO();
+        
+        StreamWriter out(fileInfo->content_stream);
+        
+        for (size_t i = 0; i < imageSequence.size(); i++) {
+            const Magick::Image &img = imageSequence[i];
+            int64_t delay_time_us;
+            if (fileInfo->is_multi_frame) {
+                delay_time_us = img.animationDelay() * 10000; // unit in 1/100s
+            } else {
+                delay_time_us = fileInfo->params.wait_ms * 1000;  // single image.
+            }
+            
+            if (delay_time_us <= 0)  {
+                delay_time_us = 100 * 1000;  // 1/10sec
+            }
+            storeInStream(img, delay_time_us, offScreenCanvas, &out);
+      }
         
     }
     //Tell the main thread that we finished execution
     cond_var.notify_one();
+}
+
+void Led::displayAnimation(const FileInfo *fileInfo, FrameCanvas *offscreen_canvas) {
+  const tmillis_t duration_ms = (fileInfo->is_multi_frame ? fileInfo->params.anim_duration_ms : fileInfo->params.wait_ms);
+  rgb_matrix::StreamReader reader(fileInfo->content_stream);
+  int loops = fileInfo->params.loops;
+  const tmillis_t end_time_ms = getTimeInMillis() + duration_ms;
+  const tmillis_t override_anim_delay = fileInfo->params.anim_delay_ms;
+  for (int k = 0; (loops < 0 || k < loops) /*&& !interrupt_received*/ && getTimeInMillis() < end_time_ms; ++k) {
+    uint32_t delay_us = 0;
+    while (/*!interrupt_received &&*/ getTimeInMillis() <= end_time_ms && reader.GetNext(offscreen_canvas, &delay_us)) {
+      const tmillis_t anim_delay_ms = override_anim_delay >= 0 ? override_anim_delay : delay_us / 1000;
+      const tmillis_t start_wait_ms = getTimeInMillis();
+      offscreen_canvas = instance->matrix->SwapOnVSync(offscreen_canvas);
+      const tmillis_t time_already_spent = getTimeInMillis() - start_wait_ms;
+      sleepMillis(anim_delay_ms - time_already_spent);
+    }
+    reader.Rewind();
+  }
+}
+
+void Led::storeInStream(const Magick::Image &img, int delay_time_us, FrameCanvas *scratch, StreamWriter *output) {
+  scratch->Clear();
+  const int x_offset = 0;
+  const int y_offset = 0;
+  for (size_t y = 0; y < img.rows(); ++y) {
+    for (size_t x = 0; x < img.columns(); ++x) {
+      const Magick::Color &c = img.pixelColor(x, y);
+      if (c.alphaQuantum() < 256) {
+        scratch->SetPixel(x + x_offset, y + y_offset,
+                          ScaleQuantumToChar(c.redQuantum()),
+                          ScaleQuantumToChar(c.greenQuantum()),
+                          ScaleQuantumToChar(c.blueQuantum()));
+      }
+    }
+  }
+  output->Stream(*scratch, delay_time_us);
 }
 
 void Led::readImageFromBuffer(string data, std::vector<Magick::Image> *result){
@@ -101,6 +180,20 @@ void Led::readImageFromBuffer(string data, std::vector<Magick::Image> *result){
     for (size_t i = 0; i < result->size(); ++i) {
         (*result)[i].scale(Magick::Geometry(instance->matrix->width(), instance->matrix->height()));
     }
+}
+
+tmillis_t Led::getTimeInMillis() {
+  struct timeval tp;
+  gettimeofday(&tp, NULL);
+  return tp.tv_sec * 1000 + tp.tv_usec / 1000;
+}
+
+void Led::sleepMillis(tmillis_t milli_seconds) {
+  if (milli_seconds <= 0) return;
+  struct timespec ts;
+  ts.tv_sec = milli_seconds / 1000;
+  ts.tv_nsec = (milli_seconds % 1000) * 1000000;
+  nanosleep(&ts, NULL);
 }
 
 void Led::prepareThread(string text) {
