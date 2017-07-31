@@ -14,6 +14,9 @@ Led* Led::getInstance(){
 }
 
 Led::Led() : color(255, 255, 0) {
+    
+    Magick::InitializeMagick(NULL);
+    
     RGBMatrix::Options options;
     options.hardware_mapping = "adafruit-hat-pwm";
     options.chain_length = 4;
@@ -36,7 +39,11 @@ Led::Led() : color(255, 255, 0) {
 }
 
 void Led::printText(string text){
-    this->prepareThread(text);
+    //this->prepareThread(text);
+}
+
+void Led::printPicture(string data){
+    this->prepareThread(data);
 }
 
 void Led::showText(Led *led, string text){
@@ -60,6 +67,39 @@ void Led::showText(Led *led, string text){
     }
     //Tell the main thread that we finished execution
     cond_var.notify_one();
+}
+
+void Led::showPicture(Led *led, string data){
+    std::unique_lock<std::mutex> lck(m);
+    while(!cond_var.wait_for(lck, std::chrono::microseconds(30000), [&]{ return led->canceled; })){
+        
+        led->matrix->Clear();
+        std::vector<Magick::Image> image_sequence;
+        readImageFromBuffer(data, &image_sequence);
+        
+    }
+    //Tell the main thread that we finished execution
+    cond_var.notify_one();
+}
+
+void Led::readImageFromBuffer(string data, std::vector<Magick::Image> *result){
+    std::vector<Magick::Image> frames;
+    Magick::Blob blob = Magick::Blob(static_cast<const void *>(data.c_str()), data.size());
+    readImages(&frames, blob);
+    if (frames.size() > 1) {
+        Magick::coalesceImages(result, frames.begin(), frames.end());
+    } else {
+        result->push_back(frames[0]);   // just a single still image.
+    }
+    
+    //const int img_width = (*result)[0].columns();
+    //const int img_height = (*result)[0].rows();
+    //const float width_fraction = (float) instance->matrix->width() / img_width;
+    //const float height_fraction = (float) instance->matrix->height() / img_height;
+    
+    for (size_t i = 0; i < result->size(); ++i) {
+        (*result)[i].scale(Magick::Geometry(instance->matrix->width(), instance->matrix->height()));
+    }
 }
 
 void Led::prepareThread(string text) {

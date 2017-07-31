@@ -14,16 +14,21 @@ RGB_LIBRARY_NAME=rgbmatrix
 RGB_LIBRARY=$(RGB_LIBDIR)/lib$(RGB_LIBRARY_NAME).a
 LDFLAGS+=-L$(RGB_LIBDIR) -l$(RGB_LIBRARY_NAME) -lrt -lm -lpthread
 
+#Image Magick Flags
+MAGICK_CXXFLAGS=`GraphicsMagick++-config --cppflags --cxxflags`
+MAGICK_LDFLAGS=`GraphicsMagick++-config --ldflags --libs`
+AV_CXXFLAGS=`pkg-config --cflags  libavcodec libavformat libswscale libavutil`
+
 all : $(BINARIES)
 
 $(RGB_LIBRARY): FORCE
 	$(MAKE) -C $(RGB_LIBDIR)
 
 ledmodule : $(OBJECTS) $(RGB_LIBRARY)
-	$(CXX) $< $(OBJECTS_TO_LINK) -o $@ $(LDFLAGS)
+	$(CXX) $< $(OBJECTS_TO_LINK) -o $@ $(LDFLAGS) $(MAGICK_LDFLAGS)
 
 %.o : %.cc
-	$(CXX) -I$(RGB_INCDIR) $(CXXFLAGS) -c -o $@ $<
+	$(CXX) -I$(RGB_INCDIR) $(CXXFLAGS) $(MAGICK_CXXFLAGS) -c -o $@ $<
 
 clean:
 	rm -f $(OBJECTS) $(BINARIES)

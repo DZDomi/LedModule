@@ -12,6 +12,9 @@
 #include <condition_variable>
 #include <chrono>
 
+#include <Magick++.h>
+#include <magick/image.h>
+
 #include "led-matrix.h"
 #include "transformer.h"
 #include "graphics.h"
@@ -28,6 +31,7 @@ class Led {
 		~Led();
 		
 		void printText(string text);
+        void printPicture(string data);
 		
 	private:
 		static Led* instance;
@@ -36,9 +40,12 @@ class Led {
 		static void interrupt(int);
         
         static void showText(Led *led, string text);
+        static void showPicture(Led *led, string data);
         
         void calculateColor(int *continuum, int *red, int *green, int *blue);
         void prepareThread(string text);
+        
+        static void readImageFromBuffer(string data, std::vector<Magick::Image> *result);
         
         RGBMatrix *matrix;
         Font font;
