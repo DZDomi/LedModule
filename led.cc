@@ -209,10 +209,13 @@ void Led::prepareThread(void (*func)(Led *, string), string text) {
     //Tell currently running thread to stop execution
     if(this->threadStarted){
         this->canceled = true;
+        cout << "Setting canceled" << endl;
         std::unique_lock<std::mutex> lck(m);
         //Tell the current running thread to check the canceled variable
         cond_var.notify_one();
+        cout << "Notify Server" << endl;
         //Wait for the thread to stop executing
+        cout << "Waiting" << endl;
         cond_var.wait(lck);
         this->canceled = false;
     }
