@@ -43,16 +43,7 @@ int main(int argc, char *argv[]) {
 				//TODO: Implement Me
 				break;
 			case ledmodule::Request::GIF: {
-                cout << "Writing to file" << endl;
-                ofstream myfile;
-                myfile.open ("/tmp/example.gif");
-                myfile << request.gifrequest().gif();
-                myfile.close();
-                cout << "Writre finisges" << endl;
-                //return 0;
-                //cout << "1 GIF:" << request.gifrequest().gif() << endl;
-				//cout << "gif" << endl;
-				//TODO: Implement Me
+                led->printPicture(request.gifrequest().gif());
 				break;
             }
 			case ledmodule::Request::VIDEO:
