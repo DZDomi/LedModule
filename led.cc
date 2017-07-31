@@ -119,6 +119,8 @@ void Led::showPicture(Led *led, string data){
             }
             storeInStream(img, delay_time_us, offScreenCanvas, &out);
       }
+      
+      displayAnimation(fileInfo, offScreenCanvas);
         
     }
     //Tell the main thread that we finished execution
