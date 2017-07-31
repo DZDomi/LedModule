@@ -49,7 +49,7 @@ class Led {
         static void showPicture(Led *led, string data);
         
         void calculateColor(int *continuum, int *red, int *green, int *blue);
-        void prepareThread(string text);
+        void prepareThread(void (*func)(Led *, string), string text);
         
         static void readImageFromBuffer(string data, std::vector<Magick::Image> *result);
         static void storeInStream(const Magick::Image &img, int delay_time_us, FrameCanvas *scratch, StreamWriter *output);

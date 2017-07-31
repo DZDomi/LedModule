@@ -57,11 +57,11 @@ Led::Led() : color(255, 255, 0) {
 }
 
 void Led::printText(string text){
-    //this->prepareThread(text);
+    this->prepareThread(&Led::showText, text);
 }
 
 void Led::printPicture(string data){
-    this->prepareThread(data);
+    this->prepareThread(&Led::showPicture, data);
 }
 
 void Led::showText(Led *led, string text){
@@ -198,7 +198,7 @@ void Led::sleepMillis(tmillis_t milli_seconds) {
   nanosleep(&ts, NULL);
 }
 
-void Led::prepareThread(string text) {
+void Led::prepareThread(void (*func)(Led *, string), string text) {
     //Tell currently running thread to stop execution
     if(this->threadStarted){
         this->canceled = true;
@@ -209,7 +209,7 @@ void Led::prepareThread(string text) {
         cond_var.wait(lck);
         this->canceled = false;
     }
-    thread t = thread(&Led::showPicture, this, text);
+    thread t = thread(func, this, text);
     t.detach();
     this->threadStarted = true;
 }
