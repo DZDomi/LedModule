@@ -88,7 +88,8 @@ void Led::showText(Led *led, string text){
         }
     }
     //Tell the main thread that we finished execution
-    cond_var.notify_one();
+    //cond_var.notify_one();
+    instance->canceled = false;
 }
 
 void Led::showPicture(Led *led, string data){
@@ -129,7 +130,8 @@ void Led::showPicture(Led *led, string data){
     }
     cout << "Out of loop" << endl;
     //Tell the main thread that we finished execution
-    cond_var.notify_one();
+    //cond_var.notify_one();
+    instance->canceled = false;
     cout << "Notified" << endl;
 }
 
@@ -212,12 +214,12 @@ void Led::prepareThread(void (*func)(Led *, string), string text) {
         cout << "Setting canceled" << endl;
         std::unique_lock<std::mutex> lck(m);
         //Tell the current running thread to check the canceled variable
-        cond_var.notify_one();
+        //cond_var.notify_one();
         cout << "Notify Server" << endl;
         //Wait for the thread to stop executing
         cout << "Waiting" << endl;
-        cond_var.wait(lck);
-        this->canceled = false;
+        cond_var.wait(lck, [&] { return !this->canceled; });
+        //this->canceled = false;
     }
     thread t = thread(func, this, text);
     t.detach();
