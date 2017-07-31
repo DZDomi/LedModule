@@ -150,8 +150,8 @@ void Led::displayAnimation(const FileInfo *fileInfo, FrameCanvas *offscreen_canv
 
 void Led::storeInStream(const Magick::Image &img, int delay_time_us, FrameCanvas *scratch, StreamWriter *output) {
   scratch->Clear();
-  const int x_offset = 0;
-  const int y_offset = 0;
+  const int x_offset = (scratch->width() - img.columns()) / 2;
+  const int y_offset = (scratch->height() - img.rows()) / 2;
   for (size_t y = 0; y < img.rows(); ++y) {
     for (size_t x = 0; x < img.columns(); ++x) {
       const Magick::Color &c = img.pixelColor(x, y);
@@ -207,7 +207,7 @@ void Led::prepareThread(void (*func)(Led *, string), string buffer) {
         std::unique_lock<std::mutex> lck(m);
         cout << "Waiting for thread to finish" << endl;
         //Tell the current running thread to check the canceled variable
-        cond_var.wait(lck, [&] { return !this->canceled; });
+        cond_var.wait(lck, [&] { return this->canceled; });
         cout << "Finished Waiting" << endl;
     }
     thread t = thread(func, this, buffer);
