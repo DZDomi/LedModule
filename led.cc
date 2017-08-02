@@ -79,6 +79,7 @@ void Led::cancelAction(){
         cond_var.notify_one();
         //Tell the current running thread to check the canceled variable
         cond_var.wait(lck, [&] { return !this->canceled; });
+        this->matrix->Clear();
     }
 }
 
@@ -190,11 +191,6 @@ void Led::readImageFromBuffer(string data, std::vector<Magick::Image> *result){
     } else {
         result->push_back(frames[0]);   // just a single still image.
     }
-    
-    //const int img_width = (*result)[0].columns();
-    //const int img_height = (*result)[0].rows();
-    //const float width_fraction = (float) instance->matrix->width() / img_width;
-    //const float height_fraction = (float) instance->matrix->height() / img_height;
     
     for (size_t i = 0; i < result->size(); ++i) {
         (*result)[i].scale(Magick::Geometry(instance->matrix->width(), instance->matrix->height()));
