@@ -72,7 +72,7 @@ void Led::prepareThread(void (*func)(Led *, string), string buffer) {
         cout << "Waiting for thread to finish" << endl;
         cond_var.notify_one();
         //Tell the current running thread to check the canceled variable
-        cond_var.wait(lck);
+        cond_var.wait(lck, [&] { return !this->canceled; });
         cout << "Finished Waiting" << endl;
     }
     thread t = thread(func, this, buffer);
