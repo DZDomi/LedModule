@@ -67,8 +67,8 @@ void Led::printPicture(string data){
 void Led::prepareThread(void (*func)(Led *, string), string buffer) {
     //Tell currently running thread to stop execution
     if(this->threadStarted){
-        std::unique_lock<std::mutex> lck(m);
         this->canceled = true;
+        std::unique_lock<std::mutex> lck(m);
         cout << "Waiting for thread to finish" << endl;
         cond_var.notify_one();
         //Tell the current running thread to check the canceled variable
