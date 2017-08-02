@@ -64,6 +64,22 @@ void Led::printPicture(string data){
     this->prepareThread(&Led::showPicture, data);
 }
 
+void Led::prepareThread(void (*func)(Led *, string), string buffer) {
+    //Tell currently running thread to stop execution
+    if(this->threadStarted){
+        std::unique_lock<std::mutex> lck(m);
+        this->canceled = true;
+        cout << "Waiting for thread to finish" << endl;
+        cond_var.notify_one();
+        //Tell the current running thread to check the canceled variable
+        cond_var.wait(lck);
+        cout << "Finished Waiting" << endl;
+    }
+    thread t = thread(func, this, buffer);
+    t.detach();
+    this->threadStarted = true;
+}
+
 void Led::showText(Led *led, string text){
     std::unique_lock<std::mutex> lck(m);
     int continuum = rand() % 1000 + 1, red, green, blue;
@@ -81,11 +97,11 @@ void Led::showText(Led *led, string text){
             pos = led->matrix->width();
             //break;
         }
-        cout << "Printing text" << endl;
     }
     //Tell the main thread that we finished execution
     cout << "Setting cancel" << endl;
     instance->canceled = false;
+    cond_var.notify_one();
     cout << "Set cancel" << endl;
 }
 
@@ -126,6 +142,7 @@ void Led::showPicture(Led *led, string data){
     //Tell the main thread that we finished execution
     cout << "Setting cancel pic" << endl;
     instance->canceled = false;
+    cond_var.notify_one();
     cout << "Set cancel pic" << endl;
 }
 
@@ -198,21 +215,6 @@ void Led::sleepMillis(tmillis_t milli_seconds) {
   ts.tv_sec = milli_seconds / 1000;
   ts.tv_nsec = (milli_seconds % 1000) * 1000000;
   nanosleep(&ts, NULL);
-}
-
-void Led::prepareThread(void (*func)(Led *, string), string buffer) {
-    //Tell currently running thread to stop execution
-    if(this->threadStarted){
-        this->canceled = true;
-        std::unique_lock<std::mutex> lck(m);
-        cout << "Waiting for thread to finish" << endl;
-        //Tell the current running thread to check the canceled variable
-        cond_var.wait(lck, [&] { return this->canceled; });
-        cout << "Finished Waiting" << endl;
-    }
-    thread t = thread(func, this, buffer);
-    t.detach();
-    this->threadStarted = true;
 }
 
 void Led::calculateColor(int *continuum, int *red, int *green, int *blue){
