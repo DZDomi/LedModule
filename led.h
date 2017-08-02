@@ -63,6 +63,5 @@ class Led {
         Color color;
         
         thread *runningThread;
-        bool threadStarted = false;
         bool canceled = false;
 };

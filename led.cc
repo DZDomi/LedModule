@@ -66,20 +66,21 @@ void Led::printPicture(string data){
 
 void Led::prepareThread(void (*func)(Led *, string), string buffer) {
     this->cancelAction();
-    thread t = thread(func, this, buffer);
-    t.detach();
-    this->threadStarted = true;
+    this->runningThread = new thread(func, this, buffer);
+    (*this->runningThread).detach();
 }
 
 void Led::cancelAction(){
     //Tell currently running thread to stop execution, if one was started
-    if(this->threadStarted){
+    if(this->runningThread){
         this->canceled = true;
         std::unique_lock<std::mutex> lck(m);
         cond_var.notify_one();
         //Tell the current running thread to check the canceled variable
         cond_var.wait(lck, [&] { return !this->canceled; });
         this->matrix->Clear();
+        free(this->runningThread);
+        this->runningThread = nullptr;
     }
 }
 
