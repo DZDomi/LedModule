@@ -8,6 +8,7 @@ message Request {
 	    PICTURE = 2;
         GIF = 3;
         VIDEO = 4;
+        CANCEL = 5;
     }
 
     required Action action = 1;

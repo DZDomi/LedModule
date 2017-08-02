@@ -69,11 +69,12 @@ enum Request_Action {
   Request_Action_TEXT = 1,
   Request_Action_PICTURE = 2,
   Request_Action_GIF = 3,
-  Request_Action_VIDEO = 4
+  Request_Action_VIDEO = 4,
+  Request_Action_CANCEL = 5
 };
 bool Request_Action_IsValid(int value);
 const Request_Action Request_Action_Action_MIN = Request_Action_TEXT;
-const Request_Action Request_Action_Action_MAX = Request_Action_VIDEO;
+const Request_Action Request_Action_Action_MAX = Request_Action_CANCEL;
 const int Request_Action_Action_ARRAYSIZE = Request_Action_Action_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* Request_Action_descriptor();
@@ -167,6 +168,8 @@ class Request : public ::google::protobuf::Message /* @@protoc_insertion_point(c
     Request_Action_GIF;
   static const Action VIDEO =
     Request_Action_VIDEO;
+  static const Action CANCEL =
+    Request_Action_CANCEL;
   static inline bool Action_IsValid(int value) {
     return Request_Action_IsValid(value);
   }

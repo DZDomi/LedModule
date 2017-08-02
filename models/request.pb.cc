@@ -179,20 +179,20 @@ void InitDefaults() {
 void AddDescriptorsImpl() {
   InitDefaults();
   static const char descriptor[] = {
-      "\n\rrequest.proto\022\tledmodule\"\263\002\n\007Request\022)"
+      "\n\rrequest.proto\022\tledmodule\"\277\002\n\007Request\022)"
       "\n\006action\030\001 \002(\0162\031.ledmodule.Request.Actio"
       "n\022\016\n\006sender\030\002 \002(\t\022+\n\013textRequest\030\003 \001(\0132\026"
       ".ledmodule.TextRequest\0221\n\016pictureRequest"
       "\030\004 \001(\0132\031.ledmodule.PictureRequest\022)\n\ngif"
       "Request\030\005 \001(\0132\025.ledmodule.GifRequest\022-\n\014"
       "videoRequest\030\006 \001(\0132\027.ledmodule.VideoRequ"
-      "est\"3\n\006Action\022\010\n\004TEXT\020\001\022\013\n\007PICTURE\020\002\022\007\n\003"
-      "GIF\020\003\022\t\n\005VIDEO\020\004\"\033\n\013TextRequest\022\014\n\004text\030"
-      "\001 \002(\t\"\020\n\016PictureRequest\"\031\n\nGifRequest\022\013\n"
-      "\003gif\030\001 \002(\014\"\016\n\014VideoRequest"
+      "est\"\?\n\006Action\022\010\n\004TEXT\020\001\022\013\n\007PICTURE\020\002\022\007\n\003"
+      "GIF\020\003\022\t\n\005VIDEO\020\004\022\n\n\006CANCEL\020\005\"\033\n\013TextRequ"
+      "est\022\014\n\004text\030\001 \002(\t\"\020\n\016PictureRequest\"\031\n\nG"
+      "ifRequest\022\013\n\003gif\030\001 \002(\014\"\016\n\014VideoRequest"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 426);
+      descriptor, 438);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "request.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&TableStruct::Shutdown);
@@ -221,6 +221,7 @@ bool Request_Action_IsValid(int value) {
     case 2:
     case 3:
     case 4:
+    case 5:
       return true;
     default:
       return false;
@@ -232,6 +233,7 @@ const Request_Action Request::TEXT;
 const Request_Action Request::PICTURE;
 const Request_Action Request::GIF;
 const Request_Action Request::VIDEO;
+const Request_Action Request::CANCEL;
 const Request_Action Request::Action_MIN;
 const Request_Action Request::Action_MAX;
 const int Request::Action_ARRAYSIZE;

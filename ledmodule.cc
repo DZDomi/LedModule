@@ -50,6 +50,9 @@ int main(int argc, char *argv[]) {
 				cout << "video" << endl;
 				//TODO: Implement Me
 				break;
+            case ledmodule::Request::CANCEL:
+                led->cancelAction();
+                break;
 		}
 	}
 	delete com;

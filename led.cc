@@ -65,19 +65,21 @@ void Led::printPicture(string data){
 }
 
 void Led::prepareThread(void (*func)(Led *, string), string buffer) {
-    //Tell currently running thread to stop execution
-    if(this->threadStarted){
-        this->canceled = true;
-        std::unique_lock<std::mutex> lck(m);
-        cout << "Waiting for thread to finish" << endl;
-        cond_var.notify_one();
-        //Tell the current running thread to check the canceled variable
-        cond_var.wait(lck, [&] { return !this->canceled; });
-        cout << "Finished Waiting" << endl;
-    }
+    this->cancelAction();
     thread t = thread(func, this, buffer);
     t.detach();
     this->threadStarted = true;
+}
+
+void Led::cancelAction(){
+    //Tell currently running thread to stop execution, if one was started
+    if(this->threadStarted){
+        this->canceled = true;
+        std::unique_lock<std::mutex> lck(m);
+        cond_var.notify_one();
+        //Tell the current running thread to check the canceled variable
+        cond_var.wait(lck, [&] { return !this->canceled; });
+    }
 }
 
 void Led::showText(Led *led, string text){
@@ -99,10 +101,8 @@ void Led::showText(Led *led, string text){
         }
     }
     //Tell the main thread that we finished execution
-    cout << "Setting cancel" << endl;
     instance->canceled = false;
     cond_var.notify_one();
-    cout << "Set cancel" << endl;
 }
 
 void Led::showPicture(Led *led, string data){
@@ -140,10 +140,8 @@ void Led::showPicture(Led *led, string data){
         displayAnimation(fileInfo, offScreenCanvas);
     }
     //Tell the main thread that we finished execution
-    cout << "Setting cancel pic" << endl;
     instance->canceled = false;
     cond_var.notify_one();
-    cout << "Set cancel pic" << endl;
 }
 
 void Led::displayAnimation(const FileInfo *fileInfo, FrameCanvas *offscreen_canvas) {

@@ -38,6 +38,7 @@ class Led {
 		
 		void printText(string text);
         void printPicture(string data);
+        void cancelAction();
 		
 	private:
 		static Led* instance;
