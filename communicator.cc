@@ -58,7 +58,7 @@ string Communicator::getRequest() {
     recv(client, &contentLength, sizeof(int), 0);
     
     int bytesRead = 0;
-	char buffer[contentLength + 1];
+	char *buffer = (char *) malloc(contentLength + 1);
     
     while(bytesRead < contentLength){
         int result = TEMP_FAILURE_RETRY(recv(client, buffer + bytesRead, contentLength - bytesRead, 0));
@@ -67,8 +67,9 @@ string Communicator::getRequest() {
         }
         bytesRead += result;
     }
-	
-	return string(buffer, bytesRead);
+	string content = string(buffer, bytesRead);
+    free(buffer);
+	return content;
 }
 
 Communicator::~Communicator() {
