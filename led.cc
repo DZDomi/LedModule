@@ -72,12 +72,18 @@ void Led::prepareThread(void (*func)(Led *, string), string buffer) {
 
 void Led::cancelAction(){
     //Tell currently running thread to stop execution, if one was started
+    cout << "cancelAction" << endl;
     if(this->runningThread){
+        cout << "runningThread" << endl;
         this->canceled = true;
+        cout << "beforeLock" << endl;
         std::unique_lock<std::mutex> lck(m);
+        cout << "afterLock" << endl;
         cond_var.notify_one();
+        cout << "notify done" << endl;
         //Tell the current running thread to check the canceled variable
         cond_var.wait(lck, [&] { return !this->canceled; });
+        cout << "wait over" << endl;
         this->matrix->Clear();
         free(this->runningThread);
         this->runningThread = nullptr;
