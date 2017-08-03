@@ -122,8 +122,11 @@ void Led::showPicture(Led *led, string data){
         
         FrameCanvas *offScreenCanvas = instance->matrix->CreateFrameCanvas();
         std::vector<Magick::Image> imageSequence;
-        readImageFromBuffer(data, &imageSequence);
-        
+        try {
+            readImageFromBuffer(data, &imageSequence);
+        } catch(exception e){
+            cout << "I bims 1 exception" << endl;
+        }
         FileInfo *fileInfo = new FileInfo();
         fileInfo->params = ImageParams();
         fileInfo->is_multi_frame = imageSequence.size() > 1;
