@@ -111,6 +111,7 @@ void Led::showText(Led *led, string text){
     }
     //Tell the main thread that we finished execution
     instance->canceled = false;
+    instance->runningThread = nullptr;
     cond_var.notify_one();
 }
 
@@ -122,10 +123,12 @@ void Led::showPicture(Led *led, string data){
         
         FrameCanvas *offScreenCanvas = instance->matrix->CreateFrameCanvas();
         std::vector<Magick::Image> imageSequence;
+        //Try to read the file into the buffer
         try {
             readImageFromBuffer(data, &imageSequence);
         } catch(exception e){
-            cout << "I bims 1 exception" << endl;
+            //Invalid image/gif
+            break;
         }
         FileInfo *fileInfo = new FileInfo();
         fileInfo->params = ImageParams();
@@ -153,6 +156,7 @@ void Led::showPicture(Led *led, string data){
     }
     //Tell the main thread that we finished execution
     instance->canceled = false;
+    instance->runningThread = nullptr;
     cond_var.notify_one();
 }
 
