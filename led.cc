@@ -31,7 +31,7 @@ Led* Led::getInstance(){
 	return instance;
 }
 
-Led::Led() : color(255, 255, 0) {
+Led::Led() : color(255, 255, 0), runningThread(NULL) {
     
     Magick::InitializeMagick(NULL);
     
