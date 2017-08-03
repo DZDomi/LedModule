@@ -62,6 +62,6 @@ class Led {
         Font font;
         Color color;
         
-        thread *runningThread;
+        thread *runningThread = nullptr;
         bool canceled = false;
 };
