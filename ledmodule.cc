@@ -25,23 +25,19 @@ int main(int argc, char *argv[]) {
         try {
             data = com->getRequest();
         } catch(std::runtime_error &e){
-            cout << e.what() << endl;
+            log("main", e.what());
             break;
         }
         
         ledmodule::Request request;
         request.ParseFromString(data);
-        
-        cout << "Message from: " << request.sender() << endl;
-        cout << request.action() << endl;
+        log("main", ledmodule::Request::Action_Name(request.action()) + " message from: " + request.sender());
         
 		switch(request.action()){
             case ledmodule::Request::TEXT:
                 led->printText(request.textrequest().text());
-				cout << request.textrequest().text() << endl;
 				break;
 			case ledmodule::Request::PICTURE:
-				cout << "picture" << endl;
 				//TODO: Implement Me
 				break;
 			case ledmodule::Request::GIF: {
@@ -49,7 +45,6 @@ int main(int argc, char *argv[]) {
 				break;
             }
 			case ledmodule::Request::VIDEO:
-				cout << "video" << endl;
 				//TODO: Implement Me
 				break;
             case ledmodule::Request::CANCEL:
