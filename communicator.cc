@@ -59,15 +59,17 @@ string Communicator::getRequest() {
     
     int contentLength = -1;
     //Get content length of the message
-    recv(client, &contentLength, sizeof(int), 0);
-    
+    int result = recv(client, &contentLength, sizeof(int), 0);
+    if(result <= 0){
+        throw std::runtime_error("Connection closed");
+    }
     log("communicator", "Got new message with content length: " + to_string(contentLength));
     
     int bytesRead = 0;
 	char *buffer = (char *) malloc(contentLength + 1);
     
     while(bytesRead < contentLength){
-        int result = TEMP_FAILURE_RETRY(recv(client, buffer + bytesRead, contentLength - bytesRead, 0));
+        result = TEMP_FAILURE_RETRY(recv(client, buffer + bytesRead, contentLength - bytesRead, 0));
         if(result <= 0){
             throw std::runtime_error("Connection closed");
         }
