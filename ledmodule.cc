@@ -7,6 +7,7 @@
 #include "communicator.h"
 #include "led.h"
 #include "models/request.pb.h"
+#include "logger.h"
 
 using namespace std;
 
@@ -16,6 +17,7 @@ int main(int argc, char *argv[]) {
     
     Led *led = Led::getInstance();
 	Communicator *com = Communicator::getInstance("/var/run/led.sock");
+    log("main", "Accepting connections on /var/run/led.sock");
 	com->acceptConnections();
     
 	while(true){
