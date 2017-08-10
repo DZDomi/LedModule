@@ -6,7 +6,9 @@ Communicator* Communicator::getInstance(string socketName){
 	if(instance != nullptr){
 		return instance;
 	}
+	log("communicator", "Trying to create socket on: " + socketName);
 	instance = new Communicator(socketName);
+    log("communicator", "Socket successfully created");
 	setUpInterruptHandler();
 	return instance;
 }
@@ -47,8 +49,10 @@ void Communicator::createSocket() {
 void Communicator::acceptConnections() {
 	struct sockaddr_in client_addr;
 	socklen_t clientLength = sizeof(client_addr);
-		
+    
+    log("communicator", "Listening for new connections on socket: " + this->socketName);
 	client = accept(server, (struct sockaddr *) &client_addr, &clientLength);
+    log("communicator", "Got connection from client: " + to_string(client));
 }
 
 string Communicator::getRequest() {
@@ -56,6 +60,8 @@ string Communicator::getRequest() {
     int contentLength = -1;
     //Get content length of the message
     recv(client, &contentLength, sizeof(int), 0);
+    
+    log("communicator", "Got new message with content length: " + to_string(contentLength));
     
     int bytesRead = 0;
 	char *buffer = (char *) malloc(contentLength + 1);
@@ -67,6 +73,7 @@ string Communicator::getRequest() {
         }
         bytesRead += result;
     }
+    log("communicator", "Message successfully received");
 	string content = string(buffer, bytesRead);
     free(buffer);
 	return content;

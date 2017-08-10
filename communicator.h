@@ -9,7 +9,10 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
+#include "util.h"
+
 using namespace std;
+using namespace util;
 
 class Communicator {
 	public:
