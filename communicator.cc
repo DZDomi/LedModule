@@ -80,7 +80,9 @@ string Communicator::getRequest() {
 }
 
 Communicator::~Communicator() {
+    log("communicator", "Trying to unlink: " + this->socketName);
 	unlink(this->socketName.c_str());
+    log("communicator", "Successfully unlinked: " + this->socketName);
 }
 
 void Communicator::setUpInterruptHandler() {
@@ -92,5 +94,7 @@ void Communicator::setUpInterruptHandler() {
 }
 
 void Communicator::interrupt(int) {
+    log("communicator", "Trying to unlink: " + instance->socketName);
 	unlink(instance->socketName.c_str());
+    log("communicator", "Successfully unlinked: " + instance->socketName);
 }

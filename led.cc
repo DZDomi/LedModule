@@ -33,6 +33,8 @@ Led* Led::getInstance(){
 
 Led::Led() : color(255, 255, 0), runningThread(nullptr) {
     
+    log("led", "Trying to initialize led wall...");
+    
     Magick::InitializeMagick(NULL);
     
     RGBMatrix::Options options;
@@ -54,40 +56,40 @@ Led::Led() : color(255, 255, 0), runningThread(nullptr) {
     //Initialize random number generator
     srand(time(NULL));
     
+    log("led", "Initialization of led wall completed");
+    
 }
 
 void Led::printText(string text){
+    log("led", "Preparing a new thread for showing text");
     this->prepareThread(&Led::showText, text);
 }
 
 void Led::printPicture(string data){
+    log("led", "Preparing a new thread for showing a picture/gif");
     this->prepareThread(&Led::showPicture, data);
 }
 
 void Led::prepareThread(void (*func)(Led *, string), string buffer) {
     this->cancelAction();
+    log("led", "Creating new thread and detaching it");
     this->runningThread = new thread(func, this, buffer);
     (*this->runningThread).detach();
 }
 
 void Led::cancelAction(){
     //Tell currently running thread to stop execution, if one was started
-    cout << "cancelAction" << endl;
-    cout << this->runningThread << endl;
     if(this->runningThread){
-        cout << "runningThread" << endl;
+        log("led", "Canceling current running thread...");
         this->canceled = true;
-        cout << "beforeLock" << endl;
         std::unique_lock<std::mutex> lck(m);
-        cout << "afterLock" << endl;
         cond_var.notify_one();
-        cout << "notify done" << endl;
         //Tell the current running thread to check the canceled variable
         cond_var.wait(lck, [&] { return !this->canceled; });
-        cout << "wait over" << endl;
         this->matrix->Clear();
         free(this->runningThread);
         this->runningThread = nullptr;
+        log("led", "Successfully canceled running thread");
     }
 }
 
@@ -95,6 +97,7 @@ void Led::showText(Led *led, string text){
     std::unique_lock<std::mutex> lck(m);
     int continuum = rand() % 1000 + 1, red, green, blue;
     int pos = led->matrix->width();
+    log("led", "Starting to print text: " + text);
     while(!cond_var.wait_for(lck, std::chrono::microseconds(30000), [&]{ return led->canceled; })){
         
         led->matrix->Clear();
@@ -117,6 +120,7 @@ void Led::showText(Led *led, string text){
 
 void Led::showPicture(Led *led, string data){
     std::unique_lock<std::mutex> lck(m);
+    log("led", "Starting to show prepare and show image/gif");
     while(!cond_var.wait_for(lck, std::chrono::microseconds(30000), [&]{ return led->canceled; })){
         
         led->matrix->Clear();
@@ -125,9 +129,11 @@ void Led::showPicture(Led *led, string data){
         std::vector<Magick::Image> imageSequence;
         //Try to read the file into the buffer
         try {
+            log("led", "Trying to read image from data...");
             readImageFromBuffer(data, &imageSequence);
         } catch(exception e){
             //Invalid image/gif
+            log("led", "Unable to convert data to an image/gif!");
             break;
         }
         FileInfo *fileInfo = new FileInfo();
@@ -135,8 +141,8 @@ void Led::showPicture(Led *led, string data){
         fileInfo->is_multi_frame = imageSequence.size() > 1;
         fileInfo->content_stream = new MemStreamIO();
         
+        log("led", "Writing image file into stream buffer...");
         StreamWriter out(fileInfo->content_stream);
-        
         for (size_t i = 0; i < imageSequence.size(); i++) {
             const Magick::Image &img = imageSequence[i];
             int64_t delay_time_us;
@@ -150,8 +156,9 @@ void Led::showPicture(Led *led, string data){
                 delay_time_us = 100 * 1000;  // 1/10sec
             }
             storeInStream(img, delay_time_us, offScreenCanvas, &out);
-      }
-      
+        }
+        log("led", "Stream buffer successfully created");
+        log("led", "Starting to show image/gif...");
         displayAnimation(fileInfo, offScreenCanvas);
     }
     //Tell the main thread that we finished execution
@@ -228,12 +235,8 @@ void Led::sleepMillis(tmillis_t milli_seconds) {
 
 void Led::calculateColor(int *continuum, int *red, int *green, int *blue){
 
-    *continuum += 1;
-    *continuum %= 3 * 255;
-
-    *red = 0;
-    *green = 0;
-    *blue = 0;
+    *continuum = ((*continuum) + 1) % (3 * 255);
+    *red = *green = *blue = 0;
 
     if (*continuum <= 255){
         int c = *continuum;

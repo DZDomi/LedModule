@@ -21,8 +21,11 @@
 #include "graphics.h"
 #include "content-streamer.h"
 
+#include "util.h"
+
 using namespace std;
 using namespace rgb_matrix;
+using namespace util;
 
 typedef int64_t tmillis_t;
 struct ImageParams;
