@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
     GOOGLE_PROTOBUF_VERIFY_VERSION;
     
     Led *led = Led::getInstance();
-	Communicator *com = Communicator::getInstance("/tmp/test.sock");
+	Communicator *com = Communicator::getInstance("/var/run/led.sock");
 	com->acceptConnections();
     
 	while(true){
