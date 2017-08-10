@@ -4,4 +4,6 @@
 using namespace std;
 using namespace boost::posix_time;
 
-void log(string type, string text);
+namespace util {
+    void log(string type, string text);
+}

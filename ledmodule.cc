@@ -7,9 +7,10 @@
 #include "communicator.h"
 #include "led.h"
 #include "models/request.pb.h"
-#include "logger.h"
+#include "util.h"
 
 using namespace std;
+using namespace util;
 
 int main(int argc, char *argv[]) {
     
