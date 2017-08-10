@@ -26,7 +26,9 @@ int main(int argc, char *argv[]) {
             data = com->getRequest();
         } catch(std::runtime_error &e){
             log("main", e.what());
-            break;
+            //Try to wait for the next connection
+            com->acceptConnections();
+            continue;
         }
         
         ledmodule::Request request;
